@@ -1,9 +1,4 @@
-from pytest_cases import parametrize_with_cases
-import ast
-
 from jonahlint.profanity_report import ProfanityReport
-from jonahlint.profanity_visitor import ProfanityVisitor
-from tests.dummy_checker import PROFANITY_CHECKER
 
 
 def case_function_name_with_profanity():
@@ -87,19 +82,4 @@ def case_function_name_without_profanities():
     reports = []
 
     return code, reports
-
-
-@parametrize_with_cases(argnames=["code", "reports"], cases=".")
-def test_profanity_visitor(code, reports):
-    visitor = ProfanityVisitor(PROFANITY_CHECKER)
-
-    visitor.visit(ast.parse(code))
-
-    assert len(visitor.reports_list) == len(reports)
-    for i, (actual_report, expected_report) in enumerate(
-        zip(visitor.reports_list, reports), start=1
-    ):
-        assert (
-            actual_report == expected_report
-        ), f"Report number {i} is different than expected."
 

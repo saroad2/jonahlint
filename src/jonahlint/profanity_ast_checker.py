@@ -1,6 +1,7 @@
 import re
 from abc import ABC, abstractmethod
 import ast
+from itertools import chain
 from typing import List
 
 from jonahlint.profanity_checker import ProfanityChecker
@@ -67,8 +68,7 @@ class FunctionNameChecker(ProfanityASTChecker):
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
-            profanity_checker=profanity_checker,
-            code=self.CODE,
+            profanity_checker=profanity_checker, code=self.CODE
         )
 
     def build_message(self, profanity: str) -> str:
@@ -81,3 +81,38 @@ class FunctionNameChecker(ProfanityASTChecker):
         return self.profanity_checker.get_profane_words(
             self.name_to_words_list(node.name)
         )
+
+
+class FunctionVariableNameChecker(ProfanityASTChecker):
+    CODE = 102
+
+    def __init__(self, profanity_checker: ProfanityChecker):
+        super().__init__(
+            profanity_checker=profanity_checker, code=self.CODE
+        )
+
+    def build_message(self, profanity: str) -> str:
+        return (
+            "Function variable names should not include profanities. "
+            f'Found "{profanity}" in the name of a variable of a function.'
+        )
+
+    def get_profanities(self, node: ast.AST) -> List[str]:
+        return chain.from_iterable(
+            [
+                self.profanity_checker.get_profane_words(
+                    self.name_to_words_list(argname.arg)
+                )
+                for argname in self.get_arguments(node.args)
+            ]
+        )
+
+    def get_arguments(self, node: ast.arguments):
+        arguments = (
+            node.posonlyargs
+            + node.args
+            + node.kw_defaults
+            + node.kwonlyargs
+            + [node.vararg, node.kwarg]
+        )
+        return [arg for arg in arguments if arg is not None]
