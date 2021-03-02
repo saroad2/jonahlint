@@ -1,0 +1,8 @@
+[run]
+source = src/jonahlint
+omit =
+    src/**/__main__.py
+    src/**/__init__.py
+
+[report]
+show_missing = True
