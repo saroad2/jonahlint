@@ -1,3 +1,13 @@
+"""
+Groups of checkers:
+
+    Functions and Methods: 100
+    Classes: 200
+    Variables: 300
+    Constants: 400
+    Comments: 500
+    Imports: 600
+"""
 import re
 from abc import ABC, abstractmethod
 import ast
