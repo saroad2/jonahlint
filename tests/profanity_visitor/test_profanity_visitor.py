@@ -4,12 +4,14 @@ from pytest_cases import parametrize_with_cases
 
 from jonahlint.profanity_visitor import ProfanityVisitor
 from tests.dummy_checker import PROFANITY_CHECKER
-from tests.profanity_visitor import case_function_name, case_function_variable_name
+from tests.profanity_visitor import (
+    case_function_name, case_function_variable_name, case_class_name
+)
 
 
 @parametrize_with_cases(
     argnames=["code", "reports"],
-    cases=[case_function_name, case_function_variable_name]
+    cases=[case_function_name, case_function_variable_name, case_class_name]
 )
 def test_profanity_visitor(code, reports):
     visitor = ProfanityVisitor(PROFANITY_CHECKER)

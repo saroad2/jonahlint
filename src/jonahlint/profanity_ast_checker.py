@@ -10,7 +10,7 @@ from jonahlint.profanity_report import ProfanityReport
 
 class ProfanityASTChecker(ABC):
     ERROR_PREFIX = "JON"
-    SNAKE_CASE = r"[a-zA-Z0-9]+(_+[A-Za-z0-9]+)*"
+    SNAKE_CASE = r"[a-zA-Z0-9]+(_+[A-Za-z0-9]+)+"
     CAMEL_CASE = r"([A-Z][a-z0-9]+)+"
 
     def __init__(self, profanity_checker: ProfanityChecker, code: int):
@@ -37,11 +37,11 @@ class ProfanityASTChecker(ABC):
 
     @abstractmethod
     def build_message(self, profanity: str) -> str:
-        ...
+        ...  # pragma: no cover
 
     @abstractmethod
     def get_profanities(self, node: ast.AST) -> List[str]:
-        ...
+        ...  # pragma: no cover
 
     @classmethod
     def name_to_words_list(cls, name: str) -> List[str]:
@@ -54,13 +54,14 @@ class ProfanityASTChecker(ABC):
     @classmethod
     def split_camel_case(cls, name: str) -> List[str]:
         upper_indices = [i for i, character in enumerate(name) if character.isupper()]
-        if 0 not in upper_indices:
-            upper_indices.insert(0, 0)
         if len(upper_indices) < 2:
             return [name]
         return [
             name[i: j] for i, j in zip(upper_indices, upper_indices[1:])
         ]
+
+
+# Functions: 100
 
 
 class FunctionNameChecker(ProfanityASTChecker):
@@ -116,3 +117,26 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
             + [node.vararg, node.kwarg]
         )
         return [arg for arg in arguments if arg is not None]
+
+
+# Classes: 200
+
+
+class ClassNameChecker(ProfanityASTChecker):
+    CODE = 201
+
+    def __init__(self, profanity_checker: ProfanityChecker):
+        super().__init__(
+            profanity_checker=profanity_checker, code=self.CODE
+        )
+
+    def build_message(self, profanity: str) -> str:
+        return (
+            "Class names should not include profanities. "
+            f'Found "{profanity}" in class name.'
+        )
+
+    def get_profanities(self, node: ast.AST) -> List[str]:
+        return self.profanity_checker.get_profane_words(
+            self.name_to_words_list(node.name)
+        )
