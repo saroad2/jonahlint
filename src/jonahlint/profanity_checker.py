@@ -6,7 +6,7 @@ class ProfanityChecker:
     def __init__(self, profane_words: List[str]):
         self.profane_words = profane_words
 
-    def get_profane_words(self, words_list: List[str]) -> List:
+    def get_profane_words(self, words_list: List[str]) -> List[str]:
         return [word for word in words_list if self.is_profane(word)]
 
     def is_profane(self, word: str) -> bool:

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import ast
-from itertools import chain
-from typing import List, Union
+from itertools import chain, product
+from typing import List, Union, Tuple
 
 from jonahlint.constants import (
     ERROR_PREFIX,
@@ -17,77 +17,60 @@ from jonahlint.words_splitter import WordsSplitter
 
 class ProfanityASTChecker(ABC):
 
-    def __init__(self, profanity_checker: ProfanityChecker, code: int):
+    def __init__(self, profanity_checker: ProfanityChecker):
         self.profanity_checker = profanity_checker
-        self.code = code
 
     def check(self, node: ast.AST) -> List[ProfanityReport]:
         return [
             self.build_report(
-                node=node, profanity=profanity, line_number=node.lineno
+                node=node, code=code, profanity=profanity, line_number=node.lineno
             )
-            for profanity in self.get_profanities(node)
+            for code, profanity in self.get_profanities(node)
         ]
 
     def build_report(
-        self, node: ast.AST, profanity: str, line_number: int
+        self, node: ast.AST, code: int, profanity: str, line_number: int
     ) -> ProfanityReport:
         return ProfanityReport(
-            error_id=self.build_error_id(),
+            error_id=self.build_error_id(code=code),
             line_number=line_number,
-            message=self.build_message(node=node, profanity=profanity),
+            message=self.build_message(node=node, code=code, profanity=profanity),
         )
 
-    def build_error_id(self):
-        return f"{ERROR_PREFIX}{self.code}"
-
     @abstractmethod
-    def build_message(self, node: ast.AST, profanity: str) -> str:
+    def build_message(self, node: ast.AST, code: int, profanity: str) -> str:
         ...  # pragma: no cover
 
     @abstractmethod
-    def get_profanities(self, node: ast.AST) -> List[str]:
+    def get_profanities(self, node: ast.AST) -> List[Tuple[int, str]]:
         ...  # pragma: no cover
 
+    @classmethod
+    def build_error_id(cls, code):
+        return f"{ERROR_PREFIX}{code}"
 
-# Functions: 100
-
-
-class FunctionNameChecker(ProfanityASTChecker):
-    CODE = FUNCTIONS_AND_METHODS_CODE + 1
-
-    def __init__(self, profanity_checker: ProfanityChecker):
-        super().__init__(
-            profanity_checker=profanity_checker, code=self.CODE
-        )
-
-    def build_message(
-        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],  profanity: str
-    ) -> str:
-        return (
-            "Function names should not include profanities. "
-            f'Found "{profanity}" in function name.'
-        )
-
-    def get_profanities(
-        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]
-    ) -> List[str]:
-        return self.profanity_checker.get_profane_words(
-            WordsSplitter.split_to_words_list(node.name)
-        )
+    @classmethod
+    def create_code_and_profanities_tuple(
+        cls, code: int, profanities: List[str]
+    ) -> List[Tuple[int, str]]:
+        return [(code, word) for word in profanities]
 
 
-class FunctionParameterNameChecker(ProfanityASTChecker):
-    CODE = FUNCTIONS_AND_METHODS_CODE + 2
-
-    def __init__(self, profanity_checker: ProfanityChecker):
-        super().__init__(
-            profanity_checker=profanity_checker, code=self.CODE
-        )
+class FunctionChecker(ProfanityASTChecker):
+    FUNCTION_NAME_CODE = FUNCTIONS_AND_METHODS_CODE + 1
+    FUNCTION_PARAMETER_CODE = FUNCTIONS_AND_METHODS_CODE + 2
 
     def build_message(
-        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],  profanity: str
+        self,
+        node: Union[ast.FunctionDef, ast.AsyncFunctionDef],
+        code: int,
+        profanity: str,
     ) -> str:
+        if code == self.FUNCTION_NAME_CODE:
+            return (
+                "Function names should not include profanities. "
+                f'Found "{profanity}" in function name.'
+            )
         return (
             "Function parameter names should not include profanities. "
             f'Found "{profanity}" in the name of a parameter '
@@ -96,17 +79,32 @@ class FunctionParameterNameChecker(ProfanityASTChecker):
 
     def get_profanities(
         self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]
-    ) -> List[str]:
-        return list(
-            chain.from_iterable(
-                [
-                    self.profanity_checker.get_profane_words(
-                        WordsSplitter.split_to_words_list(argname.arg)
-                    )
-                    for argname in self.get_arguments(node.args)
-                ]
+    ) -> List[Tuple[int, str]]:
+        profanities = []
+        profanities.extend(
+            self.create_code_and_profanities_tuple(
+                self.FUNCTION_NAME_CODE,
+                self.profanity_checker.get_profane_words(
+                    WordsSplitter.split_to_words_list(node.name)
+                ),
             )
         )
+        profanities.extend(
+            self.create_code_and_profanities_tuple(
+                self.FUNCTION_PARAMETER_CODE,
+                list(
+                    chain.from_iterable(
+                        [
+                            self.profanity_checker.get_profane_words(
+                                WordsSplitter.split_to_words_list(argname.arg)
+                            )
+                            for argname in self.get_arguments(node.args)
+                        ]
+                    )
+                )
+            )
+        )
+        return profanities
 
     @classmethod
     def get_arguments(cls, node: ast.arguments):
@@ -120,53 +118,42 @@ class FunctionParameterNameChecker(ProfanityASTChecker):
         return [arg for arg in arguments if arg is not None]
 
 
-# Classes: 200
+class ClassChecker(ProfanityASTChecker):
+    CLASS_NAME_CODE = CLASSES_CODE + 1
 
-
-class ClassNameChecker(ProfanityASTChecker):
-    CODE = CLASSES_CODE + 1
-
-    def __init__(self, profanity_checker: ProfanityChecker):
-        super().__init__(
-            profanity_checker=profanity_checker, code=self.CODE
-        )
-
-    def build_message(self, node: ast.AST,  profanity: str) -> str:
+    def build_message(self, node: ast.ClassDef, code: int, profanity: str) -> str:
         return (
             "Class names should not include profanities. "
             f'Found "{profanity}" in class name.'
         )
 
-    def get_profanities(self, node: ast.AST) -> List[str]:
-        return self.profanity_checker.get_profane_words(
-            WordsSplitter.split_to_words_list(node.name)
+    def get_profanities(self, node: ast.ClassDef) -> List[Tuple[int, str]]:
+        return self.create_code_and_profanities_tuple(
+            self.CLASS_NAME_CODE,
+            self.profanity_checker.get_profane_words(
+                WordsSplitter.split_to_words_list(node.name)
+            )
         )
-
-
-# Assignments: 300
 
 
 class AssignmentChecker(ProfanityASTChecker):
     CODE = ASSIGNMENTS_CODE + 1
 
-    def __init__(self, profanity_checker: ProfanityChecker):
-        super().__init__(
-            profanity_checker=profanity_checker, code=self.CODE
-        )
-
-    def build_message(self, node: ast.Assign,  profanity: str) -> str:
+    def build_message(self, node: ast.Assign, code: int, profanity: str) -> str:
         return (
             "Variable name should include profanities. "
             f'Found "{profanity}" in a variable name.'
         )
 
-    def get_profanities(self, node: ast.Assign) -> List[str]:
+    def get_profanities(self, node: ast.Assign) -> List[Tuple[int, str]]:
         assigned_vars = list(
             chain.from_iterable(
                 [self.get_names_from_target(target) for target in node.targets]
             )
         )
-        return self.profanity_checker.get_profane_words(assigned_vars)
+        return self.create_code_and_profanities_tuple(
+            self.CODE, self.profanity_checker.get_profane_words(assigned_vars)
+        )
 
     def get_names_from_target(self, node: ast.AST):
         if isinstance(node, ast.Name):
@@ -180,27 +167,22 @@ class AssignmentChecker(ProfanityASTChecker):
         return []
 
 
-# Constants: 400
-
-
 class ConstantChecker(ProfanityASTChecker):
     CODE = CONSTANTS_CODE + 1
 
-    def __init__(self, profanity_checker: ProfanityChecker):
-        super().__init__(
-            profanity_checker=profanity_checker, code=self.CODE
-        )
-
-    def build_message(self, node: ast.Constant,  profanity: str) -> str:
+    def build_message(self, node: ast.Constant, code: int, profanity: str) -> str:
         return (
             "Constant value should not include profanities. "
             f'Found "{profanity}" in constant "{node.value}".'
         )
 
-    def get_profanities(self, node: ast.Constant) -> List[str]:
+    def get_profanities(self, node: ast.Constant) -> List[Tuple[int, str]]:
         value = node.value
         if not isinstance(value, str):
             return []
-        return self.profanity_checker.get_profane_words(
-            WordsSplitter.split_to_words_list(value)
+        return self.create_code_and_profanities_tuple(
+            self.CODE,
+            self.profanity_checker.get_profane_words(
+                WordsSplitter.split_to_words_list(value)
+            )
         )
