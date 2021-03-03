@@ -3,10 +3,12 @@ import re
 from pathlib import Path
 from typing import List
 
+from jonahlint.constants import COMMENTS_CODE, ERROR_PREFIX
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
 from jonahlint.comments_getter import CommentsGetter
 from jonahlint.profanity_visitor import ProfanityVisitor
+from jonahlint.words_splitter import WordsSplitter
 
 
 class ProfanityAnalyzer:
@@ -28,6 +30,22 @@ class ProfanityAnalyzer:
                         line_number=comment.line_number,
                     )
                 ]
+            comment_profane_words = profanity_checker.get_profane_words(
+                WordsSplitter.split_to_words_list(comment.content)
+            )
+            reports_list.extend(
+                [
+                    ProfanityReport(
+                        error_id=f"{ERROR_PREFIX}{COMMENTS_CODE + 1}",
+                        line_number=comment.line_number,
+                        message=(
+                            "Comments should not contain profanities. "
+                            f'Found "{profane_word}" in a comment.'
+                        )
+                    )
+                    for profane_word in comment_profane_words
+                ]
+            )
         return reports_list
 
     @classmethod
