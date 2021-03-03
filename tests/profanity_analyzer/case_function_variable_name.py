@@ -133,3 +133,40 @@ def case_profane_expended_kwarg():
     ]
 
     return code, reports
+
+
+def case_method_function_profane_variable_name():
+    code = """class A:
+        def f(gucking_variable):
+            return gucking_variable + 1
+    """
+    reports = [
+        ProfanityReport(
+            error_id="JON102",
+            line_number=2,
+            message=(
+                "Function variable names should not include profanities. "
+                'Found "gucking" in the name of a variable of the function "f".'
+            )
+        )
+    ]
+
+    return code, reports
+
+
+def case_async_function_profane_variable_name():
+    code = """async def f(gucking_variable):
+    return gucking_variable + 1
+    """
+    reports = [
+        ProfanityReport(
+            error_id="JON102",
+            line_number=1,
+            message=(
+                "Function variable names should not include profanities. "
+                'Found "gucking" in the name of a variable of the function "f".'
+            )
+        )
+    ]
+
+    return code, reports
