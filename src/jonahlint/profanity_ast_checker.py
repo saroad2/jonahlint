@@ -30,23 +30,25 @@ class ProfanityASTChecker(ABC):
     def check(self, node: ast.AST) -> List[ProfanityReport]:
         return [
             self.build_report(
-                profanity=profanity, line_number=node.lineno
+                node=node, profanity=profanity, line_number=node.lineno
             )
             for profanity in self.get_profanities(node)
         ]
 
-    def build_report(self, profanity: str, line_number: int) -> ProfanityReport:
+    def build_report(
+        self, node: ast.AST, profanity: str, line_number: int
+    ) -> ProfanityReport:
         return ProfanityReport(
             error_id=self.build_error_id(),
             line_number=line_number,
-            message=self.build_message(profanity),
+            message=self.build_message(node=node, profanity=profanity),
         )
 
     def build_error_id(self):
         return f"{self.ERROR_PREFIX}{self.code}"
 
     @abstractmethod
-    def build_message(self, profanity: str) -> str:
+    def build_message(self, node: ast.AST, profanity: str) -> str:
         ...  # pragma: no cover
 
     @abstractmethod
@@ -82,7 +84,7 @@ class FunctionNameChecker(ProfanityASTChecker):
             profanity_checker=profanity_checker, code=self.CODE
         )
 
-    def build_message(self, profanity: str) -> str:
+    def build_message(self, node: ast.AST,  profanity: str) -> str:
         return (
             "Function names should not include profanities. "
             f'Found "{profanity}" in function name.'
@@ -102,10 +104,11 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
             profanity_checker=profanity_checker, code=self.CODE
         )
 
-    def build_message(self, profanity: str) -> str:
+    def build_message(self, node: ast.FunctionDef,  profanity: str) -> str:
         return (
             "Function variable names should not include profanities. "
-            f'Found "{profanity}" in the name of a variable of a function.'
+            f'Found "{profanity}" in the name of a variable '
+            f'of the function "{node.name}".'
         )
 
     def get_profanities(self, node: ast.AST) -> List[str]:
@@ -118,7 +121,8 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
             ]
         )
 
-    def get_arguments(self, node: ast.arguments):
+    @classmethod
+    def get_arguments(cls, node: ast.arguments):
         arguments = (
             node.posonlyargs
             + node.args
@@ -140,7 +144,7 @@ class ClassNameChecker(ProfanityASTChecker):
             profanity_checker=profanity_checker, code=self.CODE
         )
 
-    def build_message(self, profanity: str) -> str:
+    def build_message(self, node: ast.AST,  profanity: str) -> str:
         return (
             "Class names should not include profanities. "
             f'Found "{profanity}" in class name.'

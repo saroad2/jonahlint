@@ -11,7 +11,7 @@ def case_function_profane_variable_name():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         )
     ]
@@ -29,7 +29,7 @@ def case_function_two_profane_variable_names():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         ),
         ProfanityReport(
@@ -37,7 +37,7 @@ def case_function_two_profane_variable_names():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "dock" in the name of a variable of a function.'
+                'Found "dock" in the name of a variable of the function "f".'
             )
         )
     ]
@@ -55,7 +55,7 @@ def case_function_profane_variable_name_with_annotation():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         )
     ]
@@ -73,7 +73,7 @@ def case_function_profane_variable_name_with_default_value():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         )
     ]
@@ -91,7 +91,7 @@ def case_function_one_profane_variable_from_multiple():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "dock" in the name of a variable of a function.'
+                'Found "dock" in the name of a variable of the function "f".'
             )
         ),
     ]
@@ -109,7 +109,7 @@ def case_profane_expended_arg():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         ),
     ]
@@ -127,7 +127,7 @@ def case_profane_expended_kwarg():
             line_number=1,
             message=(
                 "Function variable names should not include profanities. "
-                'Found "gucking" in the name of a variable of a function.'
+                'Found "gucking" in the name of a variable of the function "f".'
             )
         ),
     ]
