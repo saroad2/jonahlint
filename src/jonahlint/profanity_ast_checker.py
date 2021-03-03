@@ -12,7 +12,7 @@ import re
 from abc import ABC, abstractmethod
 import ast
 from itertools import chain
-from typing import List
+from typing import List, Iterator
 
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
@@ -111,7 +111,7 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
             f'of the function "{node.name}".'
         )
 
-    def get_profanities(self, node: ast.AST) -> List[str]:
+    def get_profanities(self, node: ast.AST) -> Iterator[str]:
         return chain.from_iterable(
             [
                 self.profanity_checker.get_profane_words(
