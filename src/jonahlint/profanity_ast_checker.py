@@ -8,20 +8,18 @@ Groups of checkers:
     Comments: 500
     Imports: 600
 """
-import re
 from abc import ABC, abstractmethod
 import ast
 from itertools import chain
-from typing import List, Iterator, Union
+from typing import List, Union
 
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
+from jonahlint.words_splitter import WordsSplitter
 
 
 class ProfanityASTChecker(ABC):
     ERROR_PREFIX = "JON"
-    SNAKE_CASE = r"^[a-zA-Z0-9]+(_+[A-Za-z0-9]+)+$"
-    CAMEL_CASE = r"^([A-Z][a-z0-9]*)+$"
 
     def __init__(self, profanity_checker: ProfanityChecker, code: int):
         self.profanity_checker = profanity_checker
@@ -55,23 +53,6 @@ class ProfanityASTChecker(ABC):
     def get_profanities(self, node: ast.AST) -> List[str]:
         ...  # pragma: no cover
 
-    @classmethod
-    def name_to_words_list(cls, name: str) -> List[str]:
-        if re.match(cls.SNAKE_CASE, name):
-            return re.split("_+", name)
-        if re.match(cls.CAMEL_CASE, name):
-            return cls.split_camel_case(name)
-        return re.split(r"[ \t\n]+", name)
-
-    @classmethod
-    def split_camel_case(cls, name: str) -> List[str]:
-        upper_indices = [i for i, character in enumerate(name) if character.isupper()]
-        if len(upper_indices) < 2:
-            return [name]
-        return [
-            name[i: j] for i, j in zip(upper_indices, upper_indices[1:])
-        ]
-
 
 # Functions: 100
 
@@ -96,7 +77,7 @@ class FunctionNameChecker(ProfanityASTChecker):
         self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]
     ) -> List[str]:
         return self.profanity_checker.get_profane_words(
-            self.name_to_words_list(node.name)
+            WordsSplitter.split_to_words_list(node.name)
         )
 
 
@@ -124,7 +105,7 @@ class FunctionParameterNameChecker(ProfanityASTChecker):
             chain.from_iterable(
                 [
                     self.profanity_checker.get_profane_words(
-                        self.name_to_words_list(argname.arg)
+                        WordsSplitter.split_to_words_list(argname.arg)
                     )
                     for argname in self.get_arguments(node.args)
                 ]
@@ -162,7 +143,7 @@ class ClassNameChecker(ProfanityASTChecker):
 
     def get_profanities(self, node: ast.AST) -> List[str]:
         return self.profanity_checker.get_profane_words(
-            self.name_to_words_list(node.name)
+            WordsSplitter.split_to_words_list(node.name)
         )
 
 
@@ -193,7 +174,7 @@ class AssignmentChecker(ProfanityASTChecker):
 
     def get_names_from_target(self, node: ast.AST):
         if isinstance(node, ast.Name):
-            return self.name_to_words_list(node.id)
+            return WordsSplitter.split_to_words_list(node.id)
         if isinstance(node, (ast.Tuple, ast.List)):
             return list(
                 chain.from_iterable(
@@ -225,5 +206,5 @@ class ConstantChecker(ProfanityASTChecker):
         if not isinstance(value, str):
             return []
         return self.profanity_checker.get_profane_words(
-            self.name_to_words_list(value)
+            WordsSplitter.split_to_words_list(value)
         )
