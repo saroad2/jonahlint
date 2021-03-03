@@ -20,8 +20,8 @@ from jonahlint.profanity_report import ProfanityReport
 
 class ProfanityASTChecker(ABC):
     ERROR_PREFIX = "JON"
-    SNAKE_CASE = r"[a-zA-Z0-9]+(_+[A-Za-z0-9]+)+"
-    CAMEL_CASE = r"([A-Z][a-z0-9]+)+"
+    SNAKE_CASE = r"^[a-zA-Z0-9]+(_+[A-Za-z0-9]+)+$"
+    CAMEL_CASE = r"^([A-Z][a-z0-9]*)+$"
 
     def __init__(self, profanity_checker: ProfanityChecker, code: int):
         self.profanity_checker = profanity_checker
@@ -201,3 +201,29 @@ class AssignmentChecker(ProfanityASTChecker):
                 )
             )
         return []
+
+
+# Constants: 400
+
+
+class ConstantChecker(ProfanityASTChecker):
+    CODE = 401
+
+    def __init__(self, profanity_checker: ProfanityChecker):
+        super().__init__(
+            profanity_checker=profanity_checker, code=self.CODE
+        )
+
+    def build_message(self, node: ast.Constant,  profanity: str) -> str:
+        return (
+            "Constant value should not include profanities. "
+            f'Found "{profanity}" in constant "{node.value}".'
+        )
+
+    def get_profanities(self, node: ast.Constant) -> List[str]:
+        value = node.value
+        if not isinstance(value, str):
+            return []
+        return self.profanity_checker.get_profane_words(
+            self.name_to_words_list(value)
+        )
