@@ -164,3 +164,40 @@ class ClassNameChecker(ProfanityASTChecker):
         return self.profanity_checker.get_profane_words(
             self.name_to_words_list(node.name)
         )
+
+
+# Assignments: 300
+
+
+class AssignmentChecker(ProfanityASTChecker):
+    CODE = 301
+
+    def __init__(self, profanity_checker: ProfanityChecker):
+        super().__init__(
+            profanity_checker=profanity_checker, code=self.CODE
+        )
+
+    def build_message(self, node: ast.Assign,  profanity: str) -> str:
+        return (
+            "Variable name should include profanities. "
+            f'Found "{profanity}" in a variable name.'
+        )
+
+    def get_profanities(self, node: ast.Assign) -> List[str]:
+        assigned_vars = list(
+            chain.from_iterable(
+                [self.get_names_from_target(target) for target in node.targets]
+            )
+        )
+        return self.profanity_checker.get_profane_words(assigned_vars)
+
+    def get_names_from_target(self, node: ast.AST):
+        if isinstance(node, ast.Name):
+            return self.name_to_words_list(node.id)
+        if isinstance(node, ast.Tuple):
+            return list(
+                chain.from_iterable(
+                    [self.get_names_from_target(target) for target in node.elts]
+                )
+            )
+        return []
