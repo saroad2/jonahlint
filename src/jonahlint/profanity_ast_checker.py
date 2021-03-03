@@ -100,7 +100,7 @@ class FunctionNameChecker(ProfanityASTChecker):
         )
 
 
-class FunctionVariableNameChecker(ProfanityASTChecker):
+class FunctionParameterNameChecker(ProfanityASTChecker):
     CODE = 102
 
     def __init__(self, profanity_checker: ProfanityChecker):
@@ -112,8 +112,8 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
         self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],  profanity: str
     ) -> str:
         return (
-            "Function variable names should not include profanities. "
-            f'Found "{profanity}" in the name of a variable '
+            "Function parameter names should not include profanities. "
+            f'Found "{profanity}" in the name of a parameter '
             f'of the function "{node.name}".'
         )
 

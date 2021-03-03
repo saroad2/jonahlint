@@ -3,7 +3,7 @@ from typing import Any, Union
 
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_ast_checker import (
-    FunctionNameChecker, FunctionVariableNameChecker, ClassNameChecker
+    FunctionNameChecker, FunctionParameterNameChecker, ClassNameChecker
 )
 
 
@@ -14,7 +14,7 @@ class ProfanityVisitor(ast.NodeVisitor):
         self.function_name_checker = FunctionNameChecker(
             profanity_checker=profanity_checker
         )
-        self.function_variable_name_checker = FunctionVariableNameChecker(
+        self.function_parameter_name_checker = FunctionParameterNameChecker(
             profanity_checker=profanity_checker
         )
         self.class_name_checker = ClassNameChecker(
@@ -34,7 +34,7 @@ class ProfanityVisitor(ast.NodeVisitor):
 
     def visit_function(self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]):
         self.reports_list.extend(self.function_name_checker.check(node))
-        self.reports_list.extend(self.function_variable_name_checker.check(node))
+        self.reports_list.extend(self.function_parameter_name_checker.check(node))
         return self.generic_visit(node)
 
     def clear_reports_list(self):

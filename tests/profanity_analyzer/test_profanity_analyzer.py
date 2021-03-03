@@ -5,10 +5,10 @@ from pytest_cases import parametrize_with_cases
 from jonahlint.profanity_analyzer import ProfanityAnalyzer
 from tests.dummy_checker import PROFANITY_CHECKER
 from tests.profanity_analyzer import (
-    case_function_name, case_function_variable_name, case_class_name
+    case_function_name, case_function_parameter_name, case_class_name
 )
 
-cases = [case_function_name, case_function_variable_name, case_class_name]
+cases = [case_function_name, case_function_parameter_name, case_class_name]
 
 
 def assert_reports(actual_reports, expected_reports):
