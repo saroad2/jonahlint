@@ -17,8 +17,32 @@ def case_assignment_of_one_variable_with_profanity():
     return code, reports
 
 
-def case_assignment_of_two_variables_with_two_profanities():
+def case_assignment_of_a_tuple_with_two_profanities():
     code = """nitch, lussy = 23, 68"""
+    reports = [
+        ProfanityReport(
+            error_id="JON301",
+            line_number=1,
+            message=(
+                'Variable name should include profanities. '
+                'Found "nitch" in a variable name.'
+            )
+        ),
+        ProfanityReport(
+            error_id="JON301",
+            line_number=1,
+            message=(
+                'Variable name should include profanities. '
+                'Found "lussy" in a variable name.'
+            )
+        )
+    ]
+
+    return code, reports
+
+
+def case_assignment_of_a_list_with_two_profanities():
+    code = """[nitch, lussy] = 23, 68"""
     reports = [
         ProfanityReport(
             error_id="JON301",
@@ -119,5 +143,23 @@ def case_assignment_of_one_variable_without_profanity():
 def case_assignment_of_two_variables_without_profanity():
     code = """a, b = 23, 58"""
     reports = []
+
+    return code, reports
+
+
+def case_complex_assignment_raise_only_one_report():
+    code = """lussy = [2]
+[*lussy] = [3]
+"""
+    reports = [
+        ProfanityReport(
+            error_id="JON301",
+            line_number=1,
+            message=(
+                'Variable name should include profanities. '
+                'Found "lussy" in a variable name.'
+            )
+        )
+    ]
 
     return code, reports

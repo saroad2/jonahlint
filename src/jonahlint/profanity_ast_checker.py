@@ -194,7 +194,7 @@ class AssignmentChecker(ProfanityASTChecker):
     def get_names_from_target(self, node: ast.AST):
         if isinstance(node, ast.Name):
             return self.name_to_words_list(node.id)
-        if isinstance(node, ast.Tuple):
+        if isinstance(node, (ast.Tuple, ast.List)):
             return list(
                 chain.from_iterable(
                     [self.get_names_from_target(target) for target in node.elts]

@@ -3,6 +3,7 @@ source = src/jonahlint
 omit =
     src/**/__main__.py
     src/**/__init__.py
+    src/**/cli.py
 
 [report]
 show_missing = True

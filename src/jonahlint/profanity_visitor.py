@@ -47,6 +47,3 @@ class ProfanityVisitor(ast.NodeVisitor):
         self.reports_list.extend(self.function_name_checker.check(node))
         self.reports_list.extend(self.function_parameter_name_checker.check(node))
         return self.generic_visit(node)
-
-    def clear_reports_list(self):
-        self.reports_list.clear()
