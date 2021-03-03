@@ -6,6 +6,7 @@ import click
 from jonahlint.profanity_analyzer import ProfanityAnalyzer
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.sources_finder import SourcesFinder
+from jonahlint import __version__
 
 
 def get_profane_words():
@@ -18,6 +19,7 @@ def get_profane_words():
 @click.command()
 @click.pass_context
 @click.argument("source", type=click.Path(exists=True))
+@click.version_option(__version__)
 def jonahlint_cli(ctx: click.Context, source: Union[str, Path]):
     inner_sources = SourcesFinder.find_sources(Path(source))
     profanity_checker = ProfanityChecker(get_profane_words())
