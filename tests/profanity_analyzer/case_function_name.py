@@ -83,3 +83,22 @@ def case_function_name_without_profanities():
 
     return code, reports
 
+
+def case_function_name_of_class_method():
+    code = """class A:
+        def this_is_a_gucking_function():
+            return 1
+    """
+    reports = [
+        ProfanityReport(
+            error_id="JON101",
+            line_number=2,
+            message=(
+                "Function names should not include profanities. "
+                'Found "gucking" in function name.'
+            )
+        )
+    ]
+
+    return code, reports
+

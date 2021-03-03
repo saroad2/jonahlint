@@ -25,13 +25,11 @@ class ProfanityVisitor(ast.NodeVisitor):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
         self.reports_list.extend(self.function_name_checker.check(node))
         self.reports_list.extend(self.function_variable_name_checker.check(node))
-        for inner_node in node.body:
-            return self.generic_visit(inner_node)
+        return self.generic_visit(node)
 
     def visit_ClassDef(self, node: ast.ClassDef) -> Any:
         self.reports_list.extend(self.class_name_checker.check(node))
-        for inner_node in node.body:
-            return self.generic_visit(inner_node)
+        return self.generic_visit(node)
 
     def clear_reports_list(self):
         self.reports_list.clear()
