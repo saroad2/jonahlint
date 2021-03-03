@@ -1,25 +1,21 @@
-"""
-Groups of checkers:
-
-    Functions and Methods: 100
-    Classes: 200
-    Variables: 300
-    Constants: 400
-    Comments: 500
-    Imports: 600
-"""
 from abc import ABC, abstractmethod
 import ast
 from itertools import chain
 from typing import List, Union
 
+from jonahlint.constants import (
+    ERROR_PREFIX,
+    FUNCTIONS_AND_METHODS_CODE,
+    CLASSES_CODE,
+    ASSIGNMENTS_CODE,
+    CONSTANTS_CODE,
+)
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
 from jonahlint.words_splitter import WordsSplitter
 
 
 class ProfanityASTChecker(ABC):
-    ERROR_PREFIX = "JON"
 
     def __init__(self, profanity_checker: ProfanityChecker, code: int):
         self.profanity_checker = profanity_checker
@@ -43,7 +39,7 @@ class ProfanityASTChecker(ABC):
         )
 
     def build_error_id(self):
-        return f"{self.ERROR_PREFIX}{self.code}"
+        return f"{ERROR_PREFIX}{self.code}"
 
     @abstractmethod
     def build_message(self, node: ast.AST, profanity: str) -> str:
@@ -58,7 +54,7 @@ class ProfanityASTChecker(ABC):
 
 
 class FunctionNameChecker(ProfanityASTChecker):
-    CODE = 101
+    CODE = FUNCTIONS_AND_METHODS_CODE + 1
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
@@ -82,7 +78,7 @@ class FunctionNameChecker(ProfanityASTChecker):
 
 
 class FunctionParameterNameChecker(ProfanityASTChecker):
-    CODE = 102
+    CODE = FUNCTIONS_AND_METHODS_CODE + 2
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
@@ -128,7 +124,7 @@ class FunctionParameterNameChecker(ProfanityASTChecker):
 
 
 class ClassNameChecker(ProfanityASTChecker):
-    CODE = 201
+    CODE = CLASSES_CODE + 1
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
@@ -151,7 +147,7 @@ class ClassNameChecker(ProfanityASTChecker):
 
 
 class AssignmentChecker(ProfanityASTChecker):
-    CODE = 301
+    CODE = ASSIGNMENTS_CODE + 1
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
@@ -188,7 +184,7 @@ class AssignmentChecker(ProfanityASTChecker):
 
 
 class ConstantChecker(ProfanityASTChecker):
-    CODE = 401
+    CODE = CONSTANTS_CODE + 1
 
     def __init__(self, profanity_checker: ProfanityChecker):
         super().__init__(
