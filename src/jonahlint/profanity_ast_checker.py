@@ -12,7 +12,7 @@ import re
 from abc import ABC, abstractmethod
 import ast
 from itertools import chain
-from typing import List, Iterator
+from typing import List, Iterator, Union
 
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
@@ -84,13 +84,17 @@ class FunctionNameChecker(ProfanityASTChecker):
             profanity_checker=profanity_checker, code=self.CODE
         )
 
-    def build_message(self, node: ast.AST,  profanity: str) -> str:
+    def build_message(
+        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],  profanity: str
+    ) -> str:
         return (
             "Function names should not include profanities. "
             f'Found "{profanity}" in function name.'
         )
 
-    def get_profanities(self, node: ast.AST) -> List[str]:
+    def get_profanities(
+        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]
+    ) -> List[str]:
         return self.profanity_checker.get_profane_words(
             self.name_to_words_list(node.name)
         )
@@ -104,21 +108,27 @@ class FunctionVariableNameChecker(ProfanityASTChecker):
             profanity_checker=profanity_checker, code=self.CODE
         )
 
-    def build_message(self, node: ast.FunctionDef,  profanity: str) -> str:
+    def build_message(
+        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef],  profanity: str
+    ) -> str:
         return (
             "Function variable names should not include profanities. "
             f'Found "{profanity}" in the name of a variable '
             f'of the function "{node.name}".'
         )
 
-    def get_profanities(self, node: ast.AST) -> Iterator[str]:
-        return chain.from_iterable(
-            [
-                self.profanity_checker.get_profane_words(
-                    self.name_to_words_list(argname.arg)
-                )
-                for argname in self.get_arguments(node.args)
-            ]
+    def get_profanities(
+        self, node: Union[ast.FunctionDef, ast.AsyncFunctionDef]
+    ) -> List[str]:
+        return list(
+            chain.from_iterable(
+                [
+                    self.profanity_checker.get_profane_words(
+                        self.name_to_words_list(argname.arg)
+                    )
+                    for argname in self.get_arguments(node.args)
+                ]
+            )
         )
 
     @classmethod
