@@ -8,7 +8,7 @@ from jonahlint.constants import (
     FUNCTIONS_AND_METHODS_CODE,
     CLASSES_CODE,
     ASSIGNMENTS_CODE,
-    CONSTANTS_CODE,
+    CONSTANTS_CODE, IMPORTS_CODE,
 )
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
@@ -186,3 +186,84 @@ class ConstantChecker(ProfanityASTChecker):
                 WordsSplitter.split_to_words_list(value)
             )
         )
+
+
+class ImportChecker(ProfanityASTChecker):
+    PACKAGE_OR_MODULE_CODE = IMPORTS_CODE + 1
+    IMPORTED_OBJECT_CODE = IMPORTS_CODE + 2
+    ALIAS_CODE = IMPORTS_CODE + 3
+
+    def build_message(
+        self, node: Union[ast.Import, ast.ImportFrom], code: int, profanity: str
+    ) -> str:
+        if code == self.PACKAGE_OR_MODULE_CODE:
+            return (
+                "Module import should not include profanities. "
+                f'Found "{profanity}" in import.'
+            )
+        if code == self.IMPORTED_OBJECT_CODE:
+            return (
+                "Imported object should not include profanities. "
+                f'Found "{profanity}" in import.'
+            )
+        return (
+            "Import alias should not include profanities. "
+            f'Found "{profanity}" in import.'
+        )
+
+    def get_profanities(
+        self, node: Union[ast.Import, ast.ImportFrom]
+    ) -> List[Tuple[int, str]]:
+        profanities = []
+        if isinstance(node, ast.Import):
+            names, aliases = self.split_names_and_aliases(node.names)
+            profanities.extend(
+                self.create_code_and_profanities_tuple(
+                    self.PACKAGE_OR_MODULE_CODE,
+                    self.profanity_checker.get_profane_words(
+                        WordsSplitter.inner_split(names)
+                    )
+                )
+            )
+            profanities.extend(self.get_aliases_profanities(aliases))
+        if isinstance(node, ast.ImportFrom):
+            profanities.extend(
+                self.create_code_and_profanities_tuple(
+                    self.PACKAGE_OR_MODULE_CODE,
+                    self.profanity_checker.get_profane_words(
+                        WordsSplitter.split_to_words_list(node.module)
+                    )
+                )
+            )
+            names, aliases = self.split_names_and_aliases(node.names)
+            profanities.extend(
+                self.create_code_and_profanities_tuple(
+                    self.IMPORTED_OBJECT_CODE,
+                    self.profanity_checker.get_profane_words(
+                        WordsSplitter.inner_split(names)
+                    )
+                )
+            )
+            profanities.extend(self.get_aliases_profanities(aliases))
+        return profanities
+
+    def get_aliases_profanities(self, aliases):
+        return self.create_code_and_profanities_tuple(
+            self.ALIAS_CODE,
+            self.profanity_checker.get_profane_words(
+                WordsSplitter.inner_split(aliases)
+            )
+        )
+
+    @classmethod
+    def split_names_and_aliases(
+        cls, nodes: List[ast.AST]
+    ) -> Tuple[List[str], List[str]]:
+        names = []
+        aliases = []
+        for node in nodes:
+            if isinstance(node, ast.alias):
+                names.append(node.name)
+                if node.asname is not None:
+                    aliases.append(node.asname)
+        return names, aliases

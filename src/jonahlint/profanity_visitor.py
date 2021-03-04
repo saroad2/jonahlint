@@ -1,12 +1,12 @@
 import ast
-from typing import Any, Union
+from typing import Any
 
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_ast_checker import (
     FunctionChecker,
     ClassChecker,
     AssignmentChecker,
-    ConstantChecker,
+    ConstantChecker, ImportChecker,
 )
 
 
@@ -20,6 +20,7 @@ class ProfanityVisitor(ast.NodeVisitor):
         self.class_checker = ClassChecker(profanity_checker=profanity_checker)
         self.assignment_checker = AssignmentChecker(profanity_checker=profanity_checker)
         self.constant_checker = ConstantChecker(profanity_checker=profanity_checker)
+        self.import_checker = ImportChecker(profanity_checker=profanity_checker)
         super().__init__()
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
@@ -40,4 +41,12 @@ class ProfanityVisitor(ast.NodeVisitor):
 
     def visit_Constant(self, node: ast.Constant) -> Any:
         self.reports_list.extend(self.constant_checker.check(node))
+        return self.generic_visit(node)
+
+    def visit_Import(self, node: ast.Import) -> Any:
+        self.reports_list.extend(self.import_checker.check(node))
+        return self.generic_visit(node)
+
+    def visit_ImportFrom(self, node: ast.ImportFrom) -> Any:
+        self.reports_list.extend(self.import_checker.check(node))
         return self.generic_visit(node)

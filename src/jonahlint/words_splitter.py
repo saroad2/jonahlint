@@ -10,13 +10,15 @@ class WordsSplitter:
     @classmethod
     def split_to_words_list(cls, name: str) -> List[str]:
         if re.match(cls.CAMEL_CASE, name):
-            return cls.inner_split(cls.split_camel_case(name))
-        return cls.inner_split(cls.split_by_non_letters(name))
+            splitted_name = cls.split_camel_case(name)
+        else:
+            splitted_name = cls.split_by_non_letters(name)
+        if len(splitted_name) == 1:
+            return splitted_name
+        return cls.inner_split(splitted_name)
 
     @classmethod
     def inner_split(cls, words_list: List[str]) -> List[str]:
-        if len(words_list) == 1:
-            return words_list
         return list(
             chain.from_iterable(
                 [cls.split_to_words_list(word) for word in words_list]
