@@ -33,6 +33,18 @@ def case_upper_snake_case():
     return word, splitted
 
 
+def case_lower_module_path():
+    word = "this.is.snake.case"
+    splitted = ["this", "is", "snake", "case"]
+    return word, splitted
+
+
+def case_upper_module_path():
+    word = "THIS.IS.SNAKE.CASE"
+    splitted = ["THIS", "IS", "SNAKE", "CASE"]
+    return word, splitted
+
+
 def case_upper_camel_case():
     word = "ThisIsCamelCase"
     splitted = ["This", "Is", "Camel", "Case"]
