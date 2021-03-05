@@ -1,13 +1,13 @@
 import ast
-from dataclasses import dataclass, field
 import re
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
+from jonahlint.comments_getter import CommentsGetter
 from jonahlint.constants import COMMENTS_CODE, ERROR_PREFIX
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
-from jonahlint.comments_getter import CommentsGetter
 from jonahlint.profanity_visitor import ProfanityVisitor
 from jonahlint.words_splitter import WordsSplitter
 

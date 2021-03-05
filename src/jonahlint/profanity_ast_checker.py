@@ -1,14 +1,14 @@
-from abc import ABC, abstractmethod
 import ast
+from abc import ABC, abstractmethod
 from itertools import chain, product
-from typing import List, Union, Tuple
+from typing import List, Tuple, Union
 
 from jonahlint.constants import (
+    ASSIGNMENTS_CODE,
+    CLASSES_CODE,
+    CONSTANTS_CODE,
     ERROR_PREFIX,
     FUNCTIONS_AND_METHODS_CODE,
-    CLASSES_CODE,
-    ASSIGNMENTS_CODE,
-    CONSTANTS_CODE,
     IMPORTS_CODE,
 )
 from jonahlint.profanity_checker import ProfanityChecker

@@ -3,10 +3,10 @@ from typing import Union
 
 import click
 
+from jonahlint import __version__
 from jonahlint.profanity_analyzer import ProfanityAnalyzer
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.sources_finder import SourcesFinder
-from jonahlint import __version__
 
 
 def get_profane_words():

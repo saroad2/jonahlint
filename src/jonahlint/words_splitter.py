@@ -1,7 +1,7 @@
 import re
-from typing import List
-from string import ascii_letters
 from itertools import chain
+from string import ascii_letters
+from typing import List
 
 
 class WordsSplitter:

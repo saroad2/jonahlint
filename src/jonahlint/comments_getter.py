@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from tokenize import tokenize, COMMENT
 from io import BytesIO
+from tokenize import COMMENT, tokenize
 from typing import List
 
 

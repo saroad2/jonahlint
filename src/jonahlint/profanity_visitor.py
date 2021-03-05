@@ -1,14 +1,14 @@
 import ast
 from typing import Any
 
-from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_ast_checker import (
-    FunctionChecker,
-    ClassChecker,
     AssignmentChecker,
+    ClassChecker,
     ConstantChecker,
+    FunctionChecker,
     ImportChecker,
 )
+from jonahlint.profanity_checker import ProfanityChecker
 
 
 class ProfanityVisitor(ast.NodeVisitor):

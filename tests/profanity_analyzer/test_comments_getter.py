@@ -1,4 +1,5 @@
 from pytest_cases import parametrize_with_cases
+
 from jonahlint.comments_getter import CommentData, CommentsGetter
 
 
