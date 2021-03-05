@@ -1,7 +1,8 @@
 import ast
+from dataclasses import dataclass, field
 import re
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from jonahlint.constants import COMMENTS_CODE, ERROR_PREFIX
 from jonahlint.profanity_checker import ProfanityChecker
@@ -11,26 +12,25 @@ from jonahlint.profanity_visitor import ProfanityVisitor
 from jonahlint.words_splitter import WordsSplitter
 
 
+@dataclass
 class ProfanityAnalyzer:
 
-    @classmethod
-    def analyze_source(cls, source: str, profanity_checker: ProfanityChecker):
-        profanity_visitor = ProfanityVisitor(profanity_checker)
+    profanity_checker: ProfanityChecker
+    ignored_ids: List[str] = field(default_factory=list)
+
+    def analyze_source(self, source: str):
+        profanity_visitor = ProfanityVisitor(self.profanity_checker)
         profanity_visitor.visit(ast.parse(source))
         reports_list = profanity_visitor.reports_list
         for comment in CommentsGetter.get_comments(source):
             if comment.content.startswith("noqa:"):
-                ignored_ids = cls.get_ignored_ids(comment.content)
-                reports_list = [
-                    report
-                    for report in reports_list
-                    if not cls.report_is_ignored(
-                        report=report,
-                        ignored_ids=ignored_ids,
-                        line_number=comment.line_number,
-                    )
-                ]
-            comment_profane_words = profanity_checker.get_profane_words(
+                ignored_ids = self.get_ignored_ids(comment.content)
+                reports_list = self.remove_ignored_ids(
+                    reports_list,
+                    ignored_ids=ignored_ids,
+                    line_number=comment.line_number,
+                )
+            comment_profane_words = self.profanity_checker.get_profane_words(
                 WordsSplitter.split_to_words_list(comment.content)
             )
             reports_list.extend(
@@ -46,13 +46,31 @@ class ProfanityAnalyzer:
                     for profane_word in comment_profane_words
                 ]
             )
+        reports_list = self.remove_ignored_ids(
+            reports_list, ignored_ids=self.ignored_ids
+        )
         return reports_list
 
-    @classmethod
-    def analyze_file(cls, path: Path, profanity_checker: ProfanityChecker):
+    def analyze_file(self, path: Path):
         with open(path, mode="r") as pd:
             source = pd.read()
-        return cls.analyze_source(source, profanity_checker)
+        return self.analyze_source(source)
+
+    def remove_ignored_ids(
+        self,
+        reports_list: List[ProfanityReport],
+        ignored_ids: List[str],
+        line_number: Optional[int] = None
+    ):
+        return [
+            report
+            for report in reports_list
+            if not self.report_is_ignored(
+                report=report,
+                ignored_ids=ignored_ids,
+                line_number=line_number,
+            )
+        ]
 
     @classmethod
     def get_ignored_ids(cls, noqa_string: str) -> List[str]:
@@ -60,10 +78,11 @@ class ProfanityAnalyzer:
 
     @classmethod
     def report_is_ignored(
-        cls, report: ProfanityReport, ignored_ids: List[str], line_number: int
+        cls,
+        report: ProfanityReport,
+        ignored_ids: List[str],
+        line_number: Optional[int] = None
     ) -> bool:
-        if report.line_number != line_number:
+        if line_number is not None and report.line_number != line_number:
             return False
-        if report.error_id not in ignored_ids:
-            return False
-        return True
+        return report.error_id in ignored_ids
