@@ -17,10 +17,10 @@ cases_list = [
 def assert_reports(actual_reports, expected_reports):
     assert len(actual_reports) == len(expected_reports)
     for i, (actual_report, expected_report) in enumerate(
-            zip(actual_reports, expected_reports), start=1
+        zip(actual_reports, expected_reports), start=1
     ):
         assert (
-                actual_report == expected_report
+            actual_report == expected_report
         ), f"Report number {i} is different than expected."
 
 
@@ -54,5 +54,5 @@ def test_analyze_source_ignore_code(code, expected_reports):
             actual_reports=actual_reports,
             expected_reports=[
                 report for report in expected_reports if report.error_id != error_id
-            ]
+            ],
         )

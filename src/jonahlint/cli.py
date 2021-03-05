@@ -26,8 +26,7 @@ def jonahlint_cli(ctx: click.Context, source: Union[str, Path]):
         profanity_checker=ProfanityChecker(get_profane_words())
     )
     reports_dict = {
-        source: profanity_analyzer.analyze_file(path=source)
-        for source in inner_sources
+        source: profanity_analyzer.analyze_file(path=source) for source in inner_sources
     }
     reports_dict = {
         source: reports for source, reports in reports_dict.items() if len(reports) != 0

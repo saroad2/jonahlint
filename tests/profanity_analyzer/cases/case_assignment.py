@@ -8,9 +8,9 @@ def case_assignment_of_one_variable_with_profanity():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         )
     ]
 
@@ -24,18 +24,18 @@ def case_assignment_of_a_tuple_with_two_profanities():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "lussy" in a variable name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -48,18 +48,18 @@ def case_assignment_of_a_list_with_two_profanities():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "lussy" in a variable name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -72,9 +72,9 @@ def case_assignment_profanity_in_lower_snake_case_variable():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         )
     ]
 
@@ -88,9 +88,9 @@ def case_assignment_profanity_in_upper_snake_case_variable():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "NITCH" in a variable name.'
-            )
+            ),
         )
     ]
 
@@ -106,9 +106,9 @@ def case_assignment_in_a_function():
             error_id="JON301",
             line_number=2,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         )
     ]
 
@@ -124,9 +124,9 @@ def case_assignment_in_a_class():
             error_id="JON301",
             line_number=2,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "nitch" in a variable name.'
-            )
+            ),
         )
     ]
 
@@ -156,9 +156,9 @@ def case_complex_assignment_raise_only_one_report():
             error_id="JON301",
             line_number=1,
             message=(
-                'Variable name should include profanities. '
+                "Variable name should include profanities. "
                 'Found "lussy" in a variable name.'
-            )
+            ),
         )
     ]
 

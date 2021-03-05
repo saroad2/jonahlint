@@ -41,7 +41,7 @@ class ProfanityAnalyzer:
                         message=(
                             "Comments should not contain profanities. "
                             f'Found "{profane_word}" in a comment.'
-                        )
+                        ),
                     )
                     for profane_word in comment_profane_words
                 ]
@@ -60,7 +60,7 @@ class ProfanityAnalyzer:
         self,
         reports_list: List[ProfanityReport],
         ignored_ids: List[str],
-        line_number: Optional[int] = None
+        line_number: Optional[int] = None,
     ):
         return [
             report
@@ -81,7 +81,7 @@ class ProfanityAnalyzer:
         cls,
         report: ProfanityReport,
         ignored_ids: List[str],
-        line_number: Optional[int] = None
+        line_number: Optional[int] = None,
     ) -> bool:
         if line_number is not None and report.line_number != line_number:
             return False

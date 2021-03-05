@@ -28,10 +28,10 @@ def case_multiple_comments():
         return None  # Nothing is returned!
     """
     expected_comments = [
-        CommentData(line_number=1, content='This class is awesome'),
-        CommentData(line_number=3, content='I am a constructor'),
+        CommentData(line_number=1, content="This class is awesome"),
+        CommentData(line_number=3, content="I am a constructor"),
         CommentData(line_number=5, content="I'm a barrier"),
-        CommentData(line_number=8, content='Nothing is returned!'),
+        CommentData(line_number=8, content="Nothing is returned!"),
     ]
     return code, expected_comments
 

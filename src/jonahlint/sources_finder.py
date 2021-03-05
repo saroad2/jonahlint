@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class SourcesFinder:
-
     @classmethod
     def find_sources(cls, path: Path):
         if cls.is_python_source(path):

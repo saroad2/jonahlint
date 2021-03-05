@@ -2,7 +2,6 @@ from typing import List
 
 
 class ProfanityChecker:
-
     def __init__(self, profane_words: List[str]):
         self.profane_words = profane_words
 

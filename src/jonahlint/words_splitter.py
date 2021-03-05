@@ -20,9 +20,7 @@ class WordsSplitter:
     @classmethod
     def inner_split(cls, words_list: List[str]) -> List[str]:
         return list(
-            chain.from_iterable(
-                [cls.split_to_words_list(word) for word in words_list]
-            )
+            chain.from_iterable([cls.split_to_words_list(word) for word in words_list])
         )
 
     @classmethod
@@ -50,10 +48,8 @@ class WordsSplitter:
     def cut_word_in_indices(cls, name: str, indices: List[int]) -> List[str]:
         if 0 not in indices:
             indices.insert(0, 0)
-        splitted_words = [
-            name[i: j] for i, j in zip(indices[:-1], indices[1:])
-        ]
-        splitted_words.append(name[indices[-1]:])
+        splitted_words = [name[i:j] for i, j in zip(indices[:-1], indices[1:])]
+        splitted_words.append(name[indices[-1] :])
         return splitted_words
 
     @classmethod

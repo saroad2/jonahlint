@@ -6,17 +6,15 @@ from jonahlint.profanity_ast_checker import (
     FunctionChecker,
     ClassChecker,
     AssignmentChecker,
-    ConstantChecker, ImportChecker,
+    ConstantChecker,
+    ImportChecker,
 )
 
 
 class ProfanityVisitor(ast.NodeVisitor):
-
     def __init__(self, profanity_checker: ProfanityChecker):
         self.reports_list = []
-        self.function_checker = FunctionChecker(
-            profanity_checker=profanity_checker
-        )
+        self.function_checker = FunctionChecker(profanity_checker=profanity_checker)
         self.class_checker = ClassChecker(profanity_checker=profanity_checker)
         self.assignment_checker = AssignmentChecker(profanity_checker=profanity_checker)
         self.constant_checker = ConstantChecker(profanity_checker=profanity_checker)

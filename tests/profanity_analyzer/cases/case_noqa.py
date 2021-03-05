@@ -37,7 +37,7 @@ def case_ignore_catch_only_one_profanity():
             message=(
                 "Function names should not include profanities. "
                 'Found "nitch" in function name.'
-            )
+            ),
         )
     ]
 
@@ -55,7 +55,7 @@ def case_noqa_comment_on_wrong_line():
             message=(
                 "Function names should not include profanities. "
                 'Found "nitch" in function name.'
-            )
+            ),
         )
     ]
 

@@ -10,7 +10,7 @@ def case_profane_comment():
             message=(
                 "Comments should not contain profanities. "
                 'Found "nitch" in a comment.'
-            )
+            ),
         )
     ]
 
@@ -26,7 +26,7 @@ def case_comment_with_two_profanities():
             message=(
                 "Comments should not contain profanities. "
                 'Found "lussy" in a comment.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON501",
@@ -34,8 +34,8 @@ def case_comment_with_two_profanities():
             message=(
                 "Comments should not contain profanities. "
                 'Found "nitch" in a comment.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports

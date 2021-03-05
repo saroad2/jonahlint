@@ -10,7 +10,7 @@ def case_constant_is_a_profanity():
             message=(
                 "Constant value should not include profanities. "
                 'Found "nitch" in constant "nitch".'
-            )
+            ),
         )
     ]
 
@@ -26,7 +26,7 @@ def case_constant_is_a_sentence_with_profanity():
             message=(
                 "Constant value should not include profanities. "
                 'Found "nitch" in constant "Do not use nitch in your code!".'
-            )
+            ),
         )
     ]
 
@@ -42,7 +42,7 @@ def case_constant_assignment_is_a_profanity():
             message=(
                 "Constant value should not include profanities. "
                 'Found "nitch" in constant "nitch".'
-            )
+            ),
         )
     ]
 

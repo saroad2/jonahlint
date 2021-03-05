@@ -8,9 +8,9 @@ def case_import_module_with_profanity_in_name():
             error_id="JON601",
             line_number=1,
             message=(
-                'Module import should not include profanities. '
+                "Module import should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -24,9 +24,9 @@ def case_import_module_with_profanity_in_name_with_dots():
             error_id="JON601",
             line_number=1,
             message=(
-                'Module import should not include profanities. '
+                "Module import should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -40,9 +40,9 @@ def case_import_modules_with_profanity_in_one_name():
             error_id="JON601",
             line_number=1,
             message=(
-                'Module import should not include profanities. '
+                "Module import should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -56,9 +56,9 @@ def case_import_from_module_with_profanity_in_name():
             error_id="JON601",
             line_number=1,
             message=(
-                'Module import should not include profanities. '
+                "Module import should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -72,9 +72,9 @@ def case_import_from_module_with_profanity_in_name_with_dots():
             error_id="JON601",
             line_number=1,
             message=(
-                'Module import should not include profanities. '
+                "Module import should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -88,9 +88,9 @@ def case_import_from_module_with_profanity_in_imported_object():
             error_id="JON602",
             line_number=1,
             message=(
-                'Imported object should not include profanities. '
+                "Imported object should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -104,9 +104,9 @@ def case_import_from_module_with_profanity_in_one_of_imported_object():
             error_id="JON602",
             line_number=1,
             message=(
-                'Imported object should not include profanities. '
+                "Imported object should not include profanities. "
                 'Found "lussy" in import.'
-            )
+            ),
         )
     ]
 
@@ -120,9 +120,9 @@ def case_import_module_with_profanity_in_alias():
             error_id="JON603",
             line_number=1,
             message=(
-                'Import alias should not include profanities. '
+                "Import alias should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 
@@ -136,9 +136,9 @@ def case_import_from_module_with_profanity_in_alias():
             error_id="JON603",
             line_number=1,
             message=(
-                'Import alias should not include profanities. '
+                "Import alias should not include profanities. "
                 'Found "nitch" in import.'
-            )
+            ),
         )
     ]
 

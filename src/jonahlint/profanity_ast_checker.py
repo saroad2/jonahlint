@@ -8,7 +8,8 @@ from jonahlint.constants import (
     FUNCTIONS_AND_METHODS_CODE,
     CLASSES_CODE,
     ASSIGNMENTS_CODE,
-    CONSTANTS_CODE, IMPORTS_CODE,
+    CONSTANTS_CODE,
+    IMPORTS_CODE,
 )
 from jonahlint.profanity_checker import ProfanityChecker
 from jonahlint.profanity_report import ProfanityReport
@@ -16,7 +17,6 @@ from jonahlint.words_splitter import WordsSplitter
 
 
 class ProfanityASTChecker(ABC):
-
     def __init__(self, profanity_checker: ProfanityChecker):
         self.profanity_checker = profanity_checker
 
@@ -101,7 +101,7 @@ class FunctionChecker(ProfanityASTChecker):
                             for argname in self.get_arguments(node.args)
                         ]
                     )
-                )
+                ),
             )
         )
         return profanities
@@ -132,7 +132,7 @@ class ClassChecker(ProfanityASTChecker):
             self.CLASS_NAME_CODE,
             self.profanity_checker.get_profane_words(
                 WordsSplitter.split_to_words_list(node.name)
-            )
+            ),
         )
 
 
@@ -184,7 +184,7 @@ class ConstantChecker(ProfanityASTChecker):
             self.CODE,
             self.profanity_checker.get_profane_words(
                 WordsSplitter.split_to_words_list(value)
-            )
+            ),
         )
 
 
@@ -222,7 +222,7 @@ class ImportChecker(ProfanityASTChecker):
                     self.PACKAGE_OR_MODULE_CODE,
                     self.profanity_checker.get_profane_words(
                         WordsSplitter.inner_split(names)
-                    )
+                    ),
                 )
             )
             profanities.extend(self.get_aliases_profanities(aliases))
@@ -232,7 +232,7 @@ class ImportChecker(ProfanityASTChecker):
                     self.PACKAGE_OR_MODULE_CODE,
                     self.profanity_checker.get_profane_words(
                         WordsSplitter.split_to_words_list(node.module)
-                    )
+                    ),
                 )
             )
             names, aliases = self.split_names_and_aliases(node.names)
@@ -241,7 +241,7 @@ class ImportChecker(ProfanityASTChecker):
                     self.IMPORTED_OBJECT_CODE,
                     self.profanity_checker.get_profane_words(
                         WordsSplitter.inner_split(names)
-                    )
+                    ),
                 )
             )
             profanities.extend(self.get_aliases_profanities(aliases))
@@ -252,7 +252,7 @@ class ImportChecker(ProfanityASTChecker):
             self.ALIAS_CODE,
             self.profanity_checker.get_profane_words(
                 WordsSplitter.inner_split(aliases)
-            )
+            ),
         )
 
     @classmethod

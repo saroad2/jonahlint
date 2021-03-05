@@ -12,7 +12,7 @@ def case_function_name_with_profanity():
             message=(
                 "Function names should not include profanities. "
                 'Found "gucking" in function name.'
-            )
+            ),
         )
     ]
 
@@ -30,7 +30,7 @@ def case_function_name_with_multiple_profanities():
             message=(
                 "Function names should not include profanities. "
                 'Found "dock" in function name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON101",
@@ -38,8 +38,8 @@ def case_function_name_with_multiple_profanities():
             message=(
                 "Function names should not include profanities. "
                 'Found "gucking" in function name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -60,7 +60,7 @@ def this_is_another_gucking_function():
             message=(
                 "Function names should not include profanities. "
                 'Found "dock" in function name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON101",
@@ -68,8 +68,8 @@ def this_is_another_gucking_function():
             message=(
                 "Function names should not include profanities. "
                 'Found "gucking" in function name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -96,7 +96,7 @@ def case_function_name_of_class_method():
             message=(
                 "Function names should not include profanities. "
                 'Found "gucking" in function name.'
-            )
+            ),
         )
     ]
 
@@ -114,9 +114,8 @@ def case_async_function_name_with_profanity():
             message=(
                 "Function names should not include profanities. "
                 'Found "gucking" in function name.'
-            )
+            ),
         )
     ]
 
     return code, reports
-

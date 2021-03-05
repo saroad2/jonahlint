@@ -12,7 +12,6 @@ class CommentData:
 
 
 class CommentsGetter:
-
     @classmethod
     def get_comments(cls, source: str) -> List[CommentData]:
         comments = []
@@ -29,4 +28,3 @@ class CommentsGetter:
     @classmethod
     def normalize_comment(cls, comment: str):
         return comment[1:].strip()
-

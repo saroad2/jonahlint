@@ -12,7 +12,7 @@ def case_class_name_is_title_profanity():
             message=(
                 "Class names should not include profanities. "
                 'Found "Nitch" in class name.'
-            )
+            ),
         )
     ]
 
@@ -30,7 +30,7 @@ def case_class_name_with_profanity():
             message=(
                 "Class names should not include profanities. "
                 'Found "Gucking" in class name.'
-            )
+            ),
         )
     ]
 
@@ -48,7 +48,7 @@ def case_class_name_with_multiple_profanities():
             message=(
                 "Class names should not include profanities. "
                 'Found "Dock" in class name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON201",
@@ -56,8 +56,8 @@ def case_class_name_with_multiple_profanities():
             message=(
                 "Class names should not include profanities. "
                 'Found "Gucking" in class name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -78,7 +78,7 @@ class ThisIsAnotherGuckingClass:
             message=(
                 "Class names should not include profanities. "
                 'Found "Dock" in class name.'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON201",
@@ -86,8 +86,8 @@ class ThisIsAnotherGuckingClass:
             message=(
                 "Class names should not include profanities. "
                 'Found "Gucking" in class name.'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -100,4 +100,3 @@ def case_class_name_without_profanities():
     reports = []
 
     return code, reports
-

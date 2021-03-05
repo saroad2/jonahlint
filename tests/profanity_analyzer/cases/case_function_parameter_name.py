@@ -12,7 +12,7 @@ def case_function_profane_parameter_name():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         )
     ]
 
@@ -30,7 +30,7 @@ def case_function_two_profane_parameter_names():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         ),
         ProfanityReport(
             error_id="JON102",
@@ -38,8 +38,8 @@ def case_function_two_profane_parameter_names():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "dock" in the name of a parameter of the function "f".'
-            )
-        )
+            ),
+        ),
     ]
 
     return code, reports
@@ -56,7 +56,7 @@ def case_function_profane_parameter_name_with_annotation():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         )
     ]
 
@@ -74,7 +74,7 @@ def case_function_profane_parameter_name_with_default_value():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         )
     ]
 
@@ -92,7 +92,7 @@ def case_function_one_profane_parameter_from_multiple():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "dock" in the name of a parameter of the function "f".'
-            )
+            ),
         ),
     ]
 
@@ -110,7 +110,7 @@ def case_profane_expended_arg():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         ),
     ]
 
@@ -128,7 +128,7 @@ def case_profane_expended_kwarg():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         ),
     ]
 
@@ -147,7 +147,7 @@ def case_method_function_profane_parameter_name():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         )
     ]
 
@@ -165,7 +165,7 @@ def case_async_function_profane_parameter_name():
             message=(
                 "Function parameter names should not include profanities. "
                 'Found "gucking" in the name of a parameter of the function "f".'
-            )
+            ),
         )
     ]
 
